@@ -8,6 +8,10 @@ app.use(express.urlencoded({ extended: true }));
 
 const { Configuration, OpenAIApi } = require("openai");
 
+app.get('/PrivacyPolicy', (req, res) => {
+  res.sendFile(__dirname + '/public/PrivacyPolicy.html');
+})
+
 app.post('/api', async (req, res) => {
   const apiKey = req.body.apiKey;
   const wordLang = req.body.wordLang;
