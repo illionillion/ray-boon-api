@@ -21,7 +21,7 @@ app.post('/api', async (req, res) => {
     model: "gpt-3.5-turbo",
     messages: [{role: "user", content: `${wordLang}言語の${wordName}という${wordMean}という意味の単語を用いて簡単な例文を作成してください`}],
   });
-  res.json({"contetnt": completion.data.choices[0].message.content});
+  res.json({"content": completion.data.choices[0].message.content});
 })
 
 app.listen(process.env.PORT || 3000);
