@@ -24,4 +24,4 @@ app.post('/api', async (req, res) => {
   res.json({"contetnt": completion.data.choices[0].message.content});
 })
 
-app.listen(3000)
+app.listen(process.env.PORT || 3000);
