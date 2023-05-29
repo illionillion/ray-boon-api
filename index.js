@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-require('dotenv').config();
 
 // jsonを使えるようにする
 app.use(express.json())
