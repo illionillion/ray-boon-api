@@ -22,7 +22,7 @@ app.post('/api', async (req, res) => {
   const openai = new OpenAIApi(configuration);  
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
-    messages: [{role: "user", content: `${wordLang}言語の${wordName}という${wordMean}という意味の単語を用いて簡単な例文を作成してください`}],
+    messages: [{role: "user", content: `Create one simple short example sentence in the ${wordLang} language, always using the word ${wordName}, which means ${wordMean}. Include a Japanese translation at the end, and use only words of the same difficulty level as ${wordName}.`}],
   });
   res.json({"content": completion.data.choices[0].message.content});
 })
