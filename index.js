@@ -8,6 +8,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 app.use("/img", express.static(path.join(__dirname, "/public/img")));
+app.use("/css", express.static(path.join(__dirname, "/public/css")));
 
 const { Configuration, OpenAIApi } = require("openai");
 
