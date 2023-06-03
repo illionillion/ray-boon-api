@@ -1,11 +1,13 @@
 const express = require('express')
 const app = express()
+const path = require('node:path');
 
 // jsonを使えるようにする
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
+app.use("/img", express.static(path.join(__dirname, "/public/img")));
 
 const { Configuration, OpenAIApi } = require("openai");
 
