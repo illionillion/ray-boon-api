@@ -5,10 +5,16 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
+app.use( express.static('public') );
+
 const { Configuration, OpenAIApi } = require("openai");
 
 app.get('/PrivacyPolicy', (req, res) => {
   res.sendFile(__dirname + '/public/PrivacyPolicy.html');
+})
+
+app.get('/how-to-setting', (req, res) => {
+  res.sendFile(__dirname + '/public/HowToSetting.html');
 })
 
 app.post('/api', async (req, res) => {
