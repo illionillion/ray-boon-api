@@ -12,6 +12,10 @@ app.use("/css", express.static(path.join(__dirname, "/public/css")));
 
 const { Configuration, OpenAIApi } = require("openai");
 
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+})
+
 app.get('/PrivacyPolicy', (req, res) => {
   res.sendFile(__dirname + '/public/PrivacyPolicy.html');
 })
@@ -19,6 +23,7 @@ app.get('/PrivacyPolicy', (req, res) => {
 app.get('/how-to-setting', (req, res) => {
   res.sendFile(__dirname + '/public/HowToSetting.html');
 })
+
 
 app.post('/api', async (req, res) => {
   const apiKey = req.body.apiKey;
@@ -28,12 +33,12 @@ app.post('/api', async (req, res) => {
   const configuration = new Configuration({
     apiKey: apiKey,
   });
-  const openai = new OpenAIApi(configuration);  
+  const openai = new OpenAIApi(configuration);
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
-    messages: [{role: "user", content: `Create one simple short example sentence in the ${wordLang} language, always using the word ${wordName}, which means ${wordMean}. Include a Japanese translation at the end, and use only words of the same difficulty level as ${wordName}.`}],
+    messages: [{ role: "user", content: `Create one simple short example sentence in the ${wordLang} language, always using the word ${wordName}, which means ${wordMean}. Include a Japanese translation at the end, and use only words of the same difficulty level as ${wordName}.` }],
   });
-  res.json({"content": completion.data.choices[0].message.content});
+  res.json({ "content": completion.data.choices[0].message.content });
 })
 
 app.listen(process.env.PORT || 3000);
