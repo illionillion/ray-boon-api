@@ -1,49 +1,18 @@
 const express = require('express')
 const app = express()
 const path = require('node:path');
+const router = require('./router');
 
 // jsonを使えるようにする
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
+// ルーティングのモジュールを使えるようにする
+app.use('/', router);
+
+// 画像とCSSが読み込まれるようにする
 app.use(express.static('public'));
 app.use("/img", express.static(path.join(__dirname, "/public/img")));
 app.use("/css", express.static(path.join(__dirname, "/public/css")));
-
-const { Configuration, OpenAIApi } = require("openai");
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
-})
-
-app.get('/PrivacyPolicy', (req, res) => {
-  res.sendFile(__dirname + '/public/PrivacyPolicy.html');
-})
-
-app.get('/how-to-setting', (req, res) => {
-  res.sendFile(__dirname + '/public/HowToSetting.html');
-})
-
-const generateExample = async (apiKey, wordLang, wordName, wordMean) => {
-  const configuration = new Configuration({
-    apiKey: apiKey,
-  });
-  const openai = new OpenAIApi(configuration);
-  const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [{ role: "user", content: `Create one simple short example sentence in the ${wordLang} language, always using the word ${wordName}, which means ${wordMean}. Include a Japanese translation at the end, and use only words of the same difficulty level as ${wordName}.` }],
-  });
-  const response = { "content": completion.data.choices[0].message.content };
-  return response;
-}
-
-app.post('/api', async (req, res) => {
-  const apiKey = req.body.apiKey;
-  const wordLang = req.body.wordLang;
-  const wordName = req.body.wordName;
-  const wordMean = req.body.wordMean;
-  const result = await generateExample(apiKey, wordLang, wordName, wordMean);
-  res.json(result);
-})
 
 app.listen(process.env.PORT || 3000);
