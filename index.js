@@ -24,12 +24,7 @@ app.get('/how-to-setting', (req, res) => {
   res.sendFile(__dirname + '/public/HowToSetting.html');
 })
 
-
-app.post('/api', async (req, res) => {
-  const apiKey = req.body.apiKey;
-  const wordLang = req.body.wordLang;
-  const wordName = req.body.wordName;
-  const wordMean = req.body.wordMean;
+const generateExample = async (apiKey, wordLang, wordName, wordMean) => {
   const configuration = new Configuration({
     apiKey: apiKey,
   });
@@ -38,7 +33,17 @@ app.post('/api', async (req, res) => {
     model: "gpt-3.5-turbo",
     messages: [{ role: "user", content: `Create one simple short example sentence in the ${wordLang} language, always using the word ${wordName}, which means ${wordMean}. Include a Japanese translation at the end, and use only words of the same difficulty level as ${wordName}.` }],
   });
-  res.json({ "content": completion.data.choices[0].message.content });
+  const response = { "content": completion.data.choices[0].message.content };
+  return response;
+}
+
+app.post('/api', async (req, res) => {
+  const apiKey = req.body.apiKey;
+  const wordLang = req.body.wordLang;
+  const wordName = req.body.wordName;
+  const wordMean = req.body.wordMean;
+  const result = await generateExample(apiKey, wordLang, wordName, wordMean);
+  res.json(result);
 })
 
 app.listen(process.env.PORT || 3000);
