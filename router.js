@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const Joi = require('joi');
 const ExpressError = require('./utils/ExpressErorr')
 const generateExample = require("./generateExample");
 const catchAsync = require("./utils/catchAsync")
-
 router.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 })
@@ -17,7 +17,18 @@ router.get('/how-to-setting', (req, res) => {
 })
 
 router.post('/api', catchAsync(async (req, res) => {
-  const { apiKey, wordLang, wordName, wordMean} = req.body;
+  const generateExampleSchema = Joi.object({
+    apiKey: Joi.string().required(),
+    wordLang: Joi.string().required(),
+    wordName: Joi.string().required(),
+    wordMean: Joi.string().required()
+  });
+  const { error } = generateExampleSchema.validate(req.body);
+  if (error) {
+    const msg = error.details.map(details => details.message).join(',');
+    throw new ExpressError(msg, 400);
+  }
+  const { apiKey, wordLang, wordName, wordMean } = req.body;
   const result = await generateExample(apiKey, wordLang, wordName, wordMean);
   res.json(result);
 }))
