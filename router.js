@@ -4,6 +4,15 @@ const Joi = require('joi');
 const ExpressError = require('./utils/ExpressErorr')
 const generateExample = require("./generateExample");
 const catchAsync = require("./utils/catchAsync")
+
+// 例文を生成するための必須パラメータに対するバリデーション
+const generateExampleSchema = Joi.object({
+  apiKey: Joi.string().required(),
+  wordLang: Joi.string().required(),
+  wordName: Joi.string().required(),
+  wordMean: Joi.string().required()
+});
+
 router.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 })
@@ -17,12 +26,6 @@ router.get('/how-to-setting', (req, res) => {
 })
 
 router.post('/api', catchAsync(async (req, res) => {
-  const generateExampleSchema = Joi.object({
-    apiKey: Joi.string().required(),
-    wordLang: Joi.string().required(),
-    wordName: Joi.string().required(),
-    wordMean: Joi.string().required()
-  });
   const { error } = generateExampleSchema.validate(req.body);
   if (error) {
     const msg = error.details.map(details => details.message).join(',');
