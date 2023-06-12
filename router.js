@@ -33,7 +33,7 @@ router.post('/api', catchAsync(async (req, res) => {
   }
   const { apiKey, wordLang, wordName, wordMean } = req.body;
   const result = await generateExample(apiKey, wordLang, wordName, wordMean);
-  res.json(result);
+  res.status(200).json(result);
 }))
 
 // 不正なパスがアクセスされた時の処理
