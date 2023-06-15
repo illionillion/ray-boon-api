@@ -43,7 +43,15 @@ router.all('*', (req, res, next) => {
 
 // エラーハンドリング
 router.use((err, req, res, next) => {
-  const {statusCode = 500, message = '問題が起きました'} = err;
+  console.log(err.message)
+  let {statusCode = 500, message = 'タイムアウトしました'} = err;
+
+  // APIキーが間違っている場合の処理
+  if (err instanceof Error && err.message === 'Request failed with status code 401') {
+    statusCode = 401;
+    message = 'APIキーが間違っています';
+  }
+
   res.status(statusCode).json({"status": statusCode, "message": message})
 })
 
