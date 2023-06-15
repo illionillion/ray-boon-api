@@ -43,7 +43,6 @@ router.all('*', (req, res, next) => {
 
 // エラーハンドリング
 router.use((err, req, res, next) => {
-  console.log(err.message)
   let {statusCode = 500, message = 'タイムアウトしました'} = err;
 
   // APIキーが間違っている場合の処理
