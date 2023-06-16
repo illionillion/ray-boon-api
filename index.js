@@ -7,12 +7,12 @@ const router = require('./router');
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
-// ルーティングのモジュールを使えるようにする
-app.use('/', router);
-
 // 画像とCSSが読み込まれるようにする
 app.use(express.static('public'));
 app.use("/img", express.static(path.join(__dirname, "/public/img")));
 app.use("/css", express.static(path.join(__dirname, "/public/css")));
+
+// ルーティングのモジュールを使えるようにする
+app.use('/', router);
 
 app.listen(process.env.PORT || 3000);

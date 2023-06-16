@@ -38,7 +38,7 @@ router.post('/api', catchAsync(async (req, res) => {
 
 // 不正なパスがアクセスされた時の処理
 router.all('*', (req, res, next) => {
-  next(new ExpressError('ページが見つかりませんでした', 404));
+  next(new ExpressError('ページが見つかりませんでした',));
 });
 
 // エラーハンドリング
