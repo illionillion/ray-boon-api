@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 })
 
-router.get('/PrivacyPolicy', (req, res) => {
+router.get('/privacy-policy', (req, res) => {
   res.sendFile(__dirname + '/public/PrivacyPolicy.html');
 })
 
@@ -43,8 +43,8 @@ router.all('*', (req, res, next) => {
 
 // エラーハンドリング
 router.use((err, req, res, next) => {
-  const {statusCode = 500, message = '問題が起きました'} = err;
-  res.status(statusCode).json({"status": statusCode, "message": message})
+  const { statusCode = 500, message = '問題が起きました' } = err;
+  res.status(statusCode).json({ "status": statusCode, "message": message })
 })
 
 module.exports = router;
