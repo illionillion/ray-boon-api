@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 })
 
-router.get('/PrivacyPolicy', (req, res) => {
+router.get('/privacy-policy', (req, res) => {
   res.sendFile(__dirname + '/public/PrivacyPolicy.html');
 })
 
