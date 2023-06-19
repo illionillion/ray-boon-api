@@ -3,7 +3,6 @@ const router = express.Router();
 const Joi = require('joi');
 const ExpressError = require('./utils/ExpressErorr')
 const generateExample = require("./generateExample");
-const catchAsync = require("./utils/catchAsync")
 
 // 例文を生成するための必須パラメータに対するバリデーション
 const generateExampleSchema = Joi.object({
@@ -25,16 +24,25 @@ router.get('/how-to-setting', (req, res) => {
   res.sendFile(__dirname + '/public/HowToSetting.html');
 })
 
-router.post('/api', catchAsync(async (req, res) => {
-  const { error } = generateExampleSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map(details => details.message).join(',');
-    throw new ExpressError(msg, 400);
+router.post('/api', async (req, res, next) => {
+  try {
+    await generateExampleSchema.validateAsync(req.body, { abortEarly: false });
+    const { apiKey, wordLang, wordName, wordMean } = req.body;
+    const result = await generateExample(apiKey, wordLang, wordName, wordMean);
+    res.status(200).json(result);
+  } catch (error) {
+    // パラメータが不足している場合のエラー処理
+    if (error.isJoi) {
+      const validationErrorMsg = error.details.map(details => details.message).join(',');
+      next(new ExpressError(validationErrorMsg, 400));
+    // ChatGPTのAPIキーが間違っている場合のエラー処理
+    } else if (error.message === 'Request failed with status code 401') {
+      next(new ExpressError('APIキーが間違っています', 401));
+    } else {
+      next(error);
+    }
   }
-  const { apiKey, wordLang, wordName, wordMean } = req.body;
-  const result = await generateExample(apiKey, wordLang, wordName, wordMean);
-  res.status(200).json(result);
-}))
+})
 
 // 不正なパスがアクセスされた時の処理
 router.all('*', (req, res, next) => {
@@ -44,13 +52,6 @@ router.all('*', (req, res, next) => {
 // エラーハンドリング
 router.use((err, req, res, next) => {
   let {statusCode = 500, message = 'タイムアウトしました'} = err;
-
-  // APIキーが間違っている場合の処理
-  if (err instanceof Error && err.message === 'Request failed with status code 401') {
-    statusCode = 401;
-    message = 'APIキーが間違っています';
-  }
-
   res.status(statusCode).json({"status": statusCode, "message": message})
 })
 
