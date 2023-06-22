@@ -6,10 +6,22 @@ const generateExample = require("./generateExample");
 
 // 例文を生成するための必須パラメータに対するバリデーション
 const generateExampleSchema = Joi.object({
-  apiKey: Joi.string().required(),
-  wordLang: Joi.string().required(),
-  wordName: Joi.string().required(),
-  wordMean: Joi.string().required()
+  apiKey: Joi.string().required().messages({
+    'string.empty': 'APIキーは必須です',
+    'any.required': 'APIキーは必須です'
+  }),
+  wordLang: Joi.string().required().messages({
+    'string.empty': '言語は必須です',
+    'any.required': '言語は必須です'
+  }),
+  wordName: Joi.string().required().messages({
+    'string.empty': '単語名は必須です',
+    'any.required': '単語名は必須です'
+  }),
+  wordMean: Joi.string().required().messages({
+    'string.empty': '意味は必須です',
+    'any.required': '意味は必須です'
+  })
 });
 
 router.get('/', (req, res) => {
@@ -42,7 +54,7 @@ router.post('/api', async (req, res, next) => {
       next(error);
     }
   }
-})
+});
 
 // 不正なパスがアクセスされた時の処理
 router.all('*', (req, res) => {
