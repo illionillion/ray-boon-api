@@ -63,7 +63,7 @@ router.all('*', (req, res) => {
 
 // エラーハンドリング
 router.use((err, req, res, next) => {
-  let {statusCode = 500, message = 'タイムアウトしました'} = err;
+  let {statusCode = 500, message = '問題が発生しました'} = err;
   res.status(statusCode).json({"status": statusCode, "message": message})
 })
 
