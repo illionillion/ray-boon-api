@@ -50,6 +50,8 @@ router.post('/api', async (req, res, next) => {
     // ChatGPTのAPIキーが間違っている場合のエラー処理
     } else if (error.message === 'Request failed with status code 401') {
       next(new ExpressError('APIキーが間違っています', 401));
+    } else if (error.message === 'Request failed with status code 400'){
+      next(new ExpressError('タイムアウトしました', 500));
     } else {
       next(error);
     }
@@ -63,6 +65,7 @@ router.all('*', (req, res) => {
 
 // エラーハンドリング
 router.use((err, req, res, next) => {
+  console.log(err);
   let {statusCode = 500, message = '問題が発生しました'} = err;
   res.status(statusCode).json({"status": statusCode, "message": message})
 })
