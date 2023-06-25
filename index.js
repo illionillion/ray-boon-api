@@ -4,8 +4,8 @@ const path = require('node:path');
 const router = require('./router');
 
 // jsonを使えるようにする
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 // 画像とCSSが読み込まれるようにする
 app.use(express.static('public'));

@@ -69,7 +69,6 @@ router.all('*', (req, res) => {
 
 // エラーハンドリング
 router.use((err, req, res, next) => {
-  console.log(err);
   let {statusCode = 500, message = '問題が発生しました'} = err;
   res.status(statusCode).json({"status": statusCode, "message": message})
 })
