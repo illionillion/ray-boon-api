@@ -6,21 +6,25 @@ const generateExample = require("./generateExample");
 
 // 例文を生成するための必須パラメータに対するバリデーション
 const generateExampleSchema = Joi.object({
-  apiKey: Joi.string().required().messages({
+  apiKey: Joi.string().max(100).required().messages({
     'string.empty': 'APIキーは必須です',
-    'any.required': 'APIキーは必須です'
+    'any.required': 'APIキーは必須です',
+    'string.max': 'APIキーは100文字以下にしてください'
   }),
-  wordLang: Joi.string().required().messages({
+  wordLang: Joi.string().max(15).required().messages({
     'string.empty': '言語は必須です',
-    'any.required': '言語は必須です'
+    'any.required': '言語は必須です',
+    'string.max': '言語は15文字以下にしてください'
   }),
-  wordName: Joi.string().required().messages({
+  wordName: Joi.string().max(195).required().messages({
     'string.empty': '単語名は必須です',
-    'any.required': '単語名は必須です'
+    'any.required': '単語名は必須です',
+    'string.max': '単語名は195文字以下にしてください'
   }),
-  wordMean: Joi.string().required().messages({
+  wordMean: Joi.string().max(99).required().messages({
     'string.empty': '意味は必須です',
-    'any.required': '意味は必須です'
+    'any.required': '意味は必須です',
+    'string.max': '単語名は100文字以下にしてください'
   })
 });
 
