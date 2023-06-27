@@ -54,8 +54,6 @@ router.post('/api', async (req, res, next) => {
     // ChatGPTのAPIキーが間違っている場合のエラー処理
     } else if (error.message === 'Request failed with status code 401') {
       next(new ExpressError('APIキーが間違っています', 401));
-    } else if (error.message === 'Request failed with status code 400'){
-      next(new ExpressError('タイムアウトしました', 500));
     } else {
       next(error);
     }
@@ -66,11 +64,5 @@ router.post('/api', async (req, res, next) => {
 router.all('*', (req, res) => {
   res.status(404).sendFile(__dirname + '/public/BadPathError.html');
 });
-
-// エラーハンドリング
-router.use((err, req, res, next) => {
-  let {statusCode = 500, message = '問題が発生しました'} = err;
-  res.status(statusCode).json({"status": statusCode, "message": message})
-})
 
 module.exports = router;
