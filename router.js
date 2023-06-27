@@ -60,9 +60,4 @@ router.post('/api', async (req, res, next) => {
   }
 });
 
-// 不正なパスがアクセスされた時の処理
-router.all('*', (req, res) => {
-  res.status(404).sendFile(__dirname + '/public/BadPathError.html');
-});
-
 module.exports = router;
