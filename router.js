@@ -21,7 +21,7 @@ const generateExampleSchema = Joi.object({
     'any.required': '単語名は必須です',
     'string.max': '単語名は195文字以下にしてください'
   }),
-  wordMean: Joi.string().max(99).required().messages({
+  wordMean: Joi.string().max(100).required().messages({
     'string.empty': '意味は必須です',
     'any.required': '意味は必須です',
     'string.max': '単語名は100文字以下にしてください'
