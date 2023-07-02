@@ -51,4 +51,4 @@ app.all('*', (req, res) => {
 // エラーハンドリングのミドルウェアを使えるようにする
 app.use(errorHandler);
 
-app.listen(process.env.PORT || 3000);
+module.exports = app;
