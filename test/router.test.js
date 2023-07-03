@@ -1,6 +1,8 @@
 const request = require('supertest');
 const express = require('express');
 const router = require('../router');
+require('dotenv').config();
+const apiKey = process.env.OPENAI_API_KEY;
 
 const app = express();
 app.use(express.json());
