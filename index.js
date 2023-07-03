@@ -14,19 +14,6 @@ const timeoutHandler = (req, res, next) => {
   }
 };
 
-// エラーハンドリングのミドルウェア
-const errorHandler = (err, req, res, next) => {
-  let { statusCode = 500, message = '問題が発生しました' } = err;
-
-  // タイムアウトエラーの処理を設定
-  if (req.timedout) {
-    statusCode = 503;
-    message = 'タイムアウトしました';
-  }
-
-  res.status(statusCode).json({ "status": statusCode, "message": message });
-};
-
 // jsonを使えるようにする
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -47,8 +34,5 @@ app.use('/', router);
 app.all('*', (req, res) => {
   res.status(404).sendFile(__dirname + '/public/BadPathError.html');
 });
-
-// エラーハンドリングのミドルウェアを使えるようにする
-app.use(errorHandler);
 
 module.exports = app;

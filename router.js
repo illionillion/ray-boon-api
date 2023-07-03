@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-const ExpressError = require('./utils/ExpressErorr')
+const ExpressError = require('./utils/ExpressError')
 const generateExample = require("./generateExample");
 
 // 例文を生成するための必須パラメータに対するバリデーション
@@ -50,14 +50,30 @@ router.post('/api', async (req, res, next) => {
     // パラメータが不足している場合のエラー処理
     if (error.isJoi) {
       const validationErrorMsg = error.details.map(details => details.message).join(',');
-      next(new ExpressError(validationErrorMsg, 400));
+      return next(new ExpressError(validationErrorMsg, 400));
     // ChatGPTのAPIキーが間違っている場合のエラー処理
     } else if (error.message === 'Request failed with status code 401') {
-      next(new ExpressError('APIキーが間違っています', 401));
+      return next(new ExpressError('APIキーが間違っています', 401));
     } else {
-      next(error);
+      return next(error);
     }
   }
 });
+
+// エラーハンドリングのミドルウェア
+const errorHandler = (err, req, res, next) => {
+  let { statusCode = 500, message = '問題が発生しました' } = err;
+
+  // タイムアウトエラーの処理を設定
+  if (req.timedout) {
+    statusCode = 503;
+    message = 'タイムアウトしました';
+  }
+
+  res.status(statusCode).json({ "status": statusCode, "message": message });
+};
+
+// エラーハンドリングのミドルウェアを使えるようにする
+router.use(errorHandler);
 
 module.exports = router;
