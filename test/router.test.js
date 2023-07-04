@@ -44,4 +44,21 @@ describe('API Tests', () => {
     expect(response.headers['content-type']).toMatch('application/json');
     expect(response.body).toHaveProperty('content');
   });
+
+  test('POST /api with invalid API key should return unauthorized error', async () => {
+    const requestBody = {
+      apiKey: 'invalid-api-key',
+      wordLang: 'English',
+      wordName: 'example',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(401);
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
 });
