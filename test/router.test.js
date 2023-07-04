@@ -26,4 +26,22 @@ describe('API Tests', () => {
     expect(response.statusCode).toBe(200);
     expect(response.headers['content-type']).toMatch('text/html');
   });
+
+  test('POST /api with valid data should return result', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: 'English',
+      wordName: 'example',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(200);
+    expect(response.headers['content-type']).toMatch('application/json');
+    expect(response.body).toHaveProperty('content');
+  });
 });
