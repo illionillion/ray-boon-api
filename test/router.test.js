@@ -61,4 +61,19 @@ describe('API Tests', () => {
     expect(response.statusCode).toBe(401);
     expect(response.headers['content-type']).toMatch('application/json');
   });
+  
+  test('POST /api with missing required parameter should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: 'English',
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
 });
