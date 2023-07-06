@@ -1,8 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-const ExpressError = require('./utils/ExpressErorr')
+const ExpressError = require('./utils/ExpressError')
 const generateExample = require("./generateExample");
+
+const timeout = require('connect-timeout');
+
+// タイムアウトを処理するミドルウェア
+const timeoutHandler = (req, res, next) => {
+  if (!req.timedout) {
+    next();
+  }
+};
+
+// タイムアウトを処理するミドルウェアを使えるようにする
+router.use(timeout('5s'));
+router.use(timeoutHandler);
 
 // 例文を生成するための必須パラメータに対するバリデーション
 const generateExampleSchema = Joi.object({
@@ -24,7 +37,7 @@ const generateExampleSchema = Joi.object({
   wordMean: Joi.string().max(100).required().messages({
     'string.empty': '意味は必須です',
     'any.required': '意味は必須です',
-    'string.max': '単語名は100文字以下にしてください'
+    'string.max': '意味は100文字以下にしてください'
   })
 });
 
@@ -40,6 +53,10 @@ router.get('/how-to-setting', (req, res) => {
   res.sendFile(__dirname + '/public/HowToSetting.html');
 })
 
+router.post('/timeout', async (req, res) => {
+  await new Promise((resolve) => setTimeout(resolve, 6000));
+});
+
 router.post('/api', async (req, res, next) => {
   try {
     await generateExampleSchema.validateAsync(req.body, { abortEarly: false });
@@ -50,14 +67,30 @@ router.post('/api', async (req, res, next) => {
     // パラメータが不足している場合のエラー処理
     if (error.isJoi) {
       const validationErrorMsg = error.details.map(details => details.message).join(',');
-      next(new ExpressError(validationErrorMsg, 400));
+      return next(new ExpressError(validationErrorMsg, 400));
     // ChatGPTのAPIキーが間違っている場合のエラー処理
     } else if (error.message === 'Request failed with status code 401') {
-      next(new ExpressError('APIキーが間違っています', 401));
+      return next(new ExpressError('APIキーが間違っています', 401));
     } else {
-      next(error);
+      return next(error);
     }
   }
 });
+
+// エラーハンドリングのミドルウェア
+const errorHandler = (err, req, res, next) => {
+  let { statusCode = 500, message = '問題が発生しました' } = err;
+
+  // タイムアウトエラーの処理を設定
+  if (req.timedout) {
+    statusCode = 503;
+    message = 'タイムアウトしました';
+  }
+
+  res.status(statusCode).json({ "status": statusCode, "message": message });
+};
+
+// エラーハンドリングのミドルウェアを使えるようにする
+router.use(errorHandler);
 
 module.exports = router;
