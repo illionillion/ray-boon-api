@@ -53,7 +53,7 @@ router.get('/how-to-setting', (req, res) => {
   res.sendFile(__dirname + '/public/HowToSetting.html');
 })
 
-router.get('/timeout', async (req, res) => {
+router.post('/timeout', async (req, res) => {
   await new Promise((resolve) => setTimeout(resolve, 6000));
 });
 

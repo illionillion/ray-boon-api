@@ -27,8 +27,8 @@ describe('API Tests', () => {
     expect(response.headers['content-type']).toMatch('text/html');
   });
 
-  test('should return 503 when timeout occurs', async () => {
-    const response = await request(app).get('/timeout')
+  test('POST /timeout should return timeout error', async () => {
+    const response = await request(app).post('/timeout')
     expect(response.statusCode).toBe(503);
     expect(response.body).toEqual({ "status": 503, "message": "タイムアウトしました" });
   }, 10000);
@@ -65,6 +65,7 @@ describe('API Tests', () => {
       .set('Accept', 'application/json');
 
     expect(response.statusCode).toBe(401);
+    expect(response.body).toEqual({ "status": 401, "message": "APIキーが間違っています" });
     expect(response.headers['content-type']).toMatch('application/json');
   });
   
@@ -80,6 +81,7 @@ describe('API Tests', () => {
       .set('Accept', 'application/json');
 
     expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "単語名は必須です,意味は必須です" });
     expect(response.headers['content-type']).toMatch('application/json');
   });
 });
