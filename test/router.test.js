@@ -51,6 +51,24 @@ describe('API Tests', () => {
     expect(response.body).toHaveProperty('content');
   });
 
+  test('POST /api with invalid API key should return unauthorized error', async () => {
+    const requestBody = {
+      apiKey: 'invalid-api-key',
+      wordLang: 'English',
+      wordName: 'example',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(401);
+    expect(response.body).toEqual({ "status": 401, "message": "APIキーが間違っています" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
   test('POST /api with apiKey exceeding maximum length should return validation error', async () => {
     const requestBody = {
       apiKey: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy', //101文字
@@ -124,24 +142,6 @@ describe('API Tests', () => {
     expect(response.headers['content-type']).toMatch('application/json');
   });
 
-  test('POST /api with invalid API key should return unauthorized error', async () => {
-    const requestBody = {
-      apiKey: 'invalid-api-key',
-      wordLang: 'English',
-      wordName: 'example',
-      wordMean: 'an instance serving to illustrate a rule or method'
-    };
-
-    const response = await request(app)
-      .post('/api')
-      .send(requestBody)
-      .set('Accept', 'application/json');
-
-    expect(response.statusCode).toBe(401);
-    expect(response.body).toEqual({ "status": 401, "message": "APIキーが間違っています" });
-    expect(response.headers['content-type']).toMatch('application/json');
-  });
-
   test('POST /api with missing apiKey should return validation error', async () => {
     const requestBody = {
       apiKey: '',
@@ -160,7 +160,7 @@ describe('API Tests', () => {
     expect(response.headers['content-type']).toMatch('application/json');
   });
 
-  test('POST /api with wordLanng should return validation error', async () => {
+  test('POST /api with missing wordLanng should return validation error', async () => {
     const requestBody = {
       apiKey: apiKey,
       wordLang: '',
@@ -178,7 +178,7 @@ describe('API Tests', () => {
     expect(response.headers['content-type']).toMatch('application/json');
   });
 
-  test('POST /api with wordName should return validation error', async () => {
+  test('POST /api with missing wordName should return validation error', async () => {
     const requestBody = {
       apiKey: apiKey,
       wordLang: 'English',
@@ -196,7 +196,7 @@ describe('API Tests', () => {
     expect(response.headers['content-type']).toMatch('application/json');
   });
 
-  test('POST /api with wordMean should return validation error', async () => {
+  test('POST /api with missing wordMean should return validation error', async () => {
     const requestBody = {
       apiKey: apiKey,
       wordLang: 'English',
