@@ -51,6 +51,79 @@ describe('API Tests', () => {
     expect(response.body).toHaveProperty('content');
   });
 
+  test('POST /api with apiKey exceeding maximum length should return validation error', async () => {
+    const requestBody = {
+      apiKey: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy', //101文字
+      wordLang: 'English',
+      wordName: 'example',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+  
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+  
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "APIキーは100文字以下にしてください" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+
+  test('POST /api with wordLang exceeding maximum length should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: 'abcdefghijklmnop', // 16文字',
+      wordName: 'example',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+  
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+  
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "言語は15文字以下にしてください" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with wordName exceeding maximum length should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: 'English',
+      wordName: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstu', // 196文字
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+  
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+  
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "単語名は195文字以下にしてください" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with wordMean exceeding maximum length should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: 'English',
+      wordName: 'example',
+      wordMean: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy' // 101文字
+    };
+  
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+  
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "意味は100文字以下にしてください" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
   test('POST /api with invalid API key should return unauthorized error', async () => {
     const requestBody = {
       apiKey: 'invalid-api-key',
@@ -68,11 +141,13 @@ describe('API Tests', () => {
     expect(response.body).toEqual({ "status": 401, "message": "APIキーが間違っています" });
     expect(response.headers['content-type']).toMatch('application/json');
   });
-  
-  test('POST /api with missing required parameter should return validation error', async () => {
+
+  test('POST /api with missing apiKey should return validation error', async () => {
     const requestBody = {
-      apiKey: apiKey,
+      apiKey: '',
       wordLang: 'English',
+      wordName: 'example',
+      wordMean: 'an instance serving to illustrate a rule or method'
     };
 
     const response = await request(app)
@@ -81,7 +156,61 @@ describe('API Tests', () => {
       .set('Accept', 'application/json');
 
     expect(response.statusCode).toBe(400);
-    expect(response.body).toEqual({ "status": 400, "message": "単語名は必須です,意味は必須です" });
+    expect(response.body).toEqual({ "status": 400, "message": "APIキーは必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with wordLanng should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: '',
+      wordName: 'example',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "言語は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with wordName should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: 'English',
+      wordName: '',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "単語名は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with wordMean should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: 'English',
+      wordName: 'example',
+      wordMean: ''
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "意味は必須です" });
     expect(response.headers['content-type']).toMatch('application/json');
   });
 });
