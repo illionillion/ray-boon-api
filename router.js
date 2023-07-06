@@ -4,6 +4,19 @@ const Joi = require('joi');
 const ExpressError = require('./utils/ExpressError')
 const generateExample = require("./generateExample");
 
+const timeout = require('connect-timeout');
+
+// タイムアウトを処理するミドルウェア
+const timeoutHandler = (req, res, next) => {
+  if (!req.timedout) {
+    next();
+  }
+};
+
+// タイムアウトを処理するミドルウェアを使えるようにする
+router.use(timeout('5s'));
+router.use(timeoutHandler);
+
 // 例文を生成するための必須パラメータに対するバリデーション
 const generateExampleSchema = Joi.object({
   apiKey: Joi.string().max(100).required().messages({
@@ -39,6 +52,10 @@ router.get('/privacy-policy', (req, res) => {
 router.get('/how-to-setting', (req, res) => {
   res.sendFile(__dirname + '/public/HowToSetting.html');
 })
+
+router.get('/timeout', async (req, res) => {
+  await new Promise((resolve) => setTimeout(resolve, 6000));
+});
 
 router.post('/api', async (req, res, next) => {
   try {

@@ -27,6 +27,12 @@ describe('API Tests', () => {
     expect(response.headers['content-type']).toMatch('text/html');
   });
 
+  test('should return 503 when timeout occurs', async () => {
+    const response = await request(app).get('/timeout')
+    expect(response.statusCode).toBe(503);
+    expect(response.body).toEqual({ "status": 503, "message": "タイムアウトしました" });
+  }, 10000);
+
   test('POST /api with valid data should return result', async () => {
     const requestBody = {
       apiKey: apiKey,
