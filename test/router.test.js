@@ -238,4 +238,184 @@ describe('API Tests', () => {
     expect(response.body).toEqual({ "status": 400, "message": "意味は必須です" });
     expect(response.headers['content-type']).toMatch('application/json');
   });
+
+  test('POST /api with missing apiKey and wordLang should return validation error', async () => {
+    const requestBody = {
+      apiKey: '',
+      wordLang: '',
+      wordName: 'example',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "APIキーは必須です,言語は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with missing apiKey and wordName should return validation error', async () => {
+    const requestBody = {
+      apiKey: '',
+      wordLang: 'English',
+      wordName: '',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "APIキーは必須です,単語名は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with missing apiKey and wordMean should return validation error', async () => {
+    const requestBody = {
+      apiKey: '',
+      wordLang: 'English',
+      wordName: 'example',
+      wordMean: ''
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "APIキーは必須です,意味は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with missing wordLang and wordName should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: '',
+      wordName: '',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "言語は必須です,単語名は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with missing wordName and wordMean should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: 'English',
+      wordName: '',
+      wordMean: ''
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "単語名は必須です,意味は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with missing apiKey and wordLang and wordName should return validation error', async () => {
+    const requestBody = {
+      apiKey: '',
+      wordLang: '',
+      wordName: '',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "APIキーは必須です,言語は必須です,単語名は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with missing apiKey and wordLang and wordMean should return validation error', async () => {
+    const requestBody = {
+      apiKey: '',
+      wordLang: '',
+      wordName: 'example',
+      wordMean: ''
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "APIキーは必須です,言語は必須です,意味は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with missing apiKey and wordLang and wordMean should return validation error', async () => {
+    const requestBody = {
+      apiKey: '',
+      wordLang: 'English',
+      wordName: '',
+      wordMean: ''
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "APIキーは必須です,単語名は必須です,意味は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with missing wordLang and wordName and wordMean should return validation error', async () => {
+    const requestBody = {
+      apiKey: apiKey,
+      wordLang: '',
+      wordName: '',
+      wordMean: ''
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "言語は必須です,単語名は必須です,意味は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with missing apiKey wordLang and wordName and wordMean should return validation error', async () => {
+    const requestBody = {
+      apiKey: '',
+      wordLang: '',
+      wordName: '',
+      wordMean: ''
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(400);
+    expect(response.body).toEqual({ "status": 400, "message": "APIキーは必須です,言語は必須です,単語名は必須です,意味は必須です" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
 });
