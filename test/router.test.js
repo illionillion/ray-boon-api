@@ -28,6 +28,12 @@ describe('API Tests', () => {
     expect(response.headers['content-type']).toMatch('text/html');
   });
 
+  test('GET bad path request should return not found error ', async () => {
+    const response = await request(app).get('/badpath');
+    expect(response.statusCode).toBe(404);
+    expect(response.headers['content-type']).toMatch('text/html');
+  });
+
   test('POST /timeout should return timeout error', async () => {
     const response = await request(app).post('/timeout')
     expect(response.statusCode).toBe(503);
