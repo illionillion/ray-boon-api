@@ -3,6 +3,7 @@ const express = require('express');
 const router = require('../router');
 require('dotenv').config();
 const apiKey = process.env.OPENAI_API_KEY;
+const apiKeyExpired = process.env.OPENAI_API_KEY_EXPIRED;
 
 const app = express();
 app.use(express.json());
@@ -66,6 +67,24 @@ describe('API Tests', () => {
 
     expect(response.statusCode).toBe(401);
     expect(response.body).toEqual({ "status": 401, "message": "APIキーが間違っています" });
+    expect(response.headers['content-type']).toMatch('application/json');
+  });
+
+  test('POST /api with API key free quota has expired should return unauthorized error', async () => {
+    const requestBody = {
+      apiKey: apiKeyExpired,
+      wordLang: 'English',
+      wordName: 'example',
+      wordMean: 'an instance serving to illustrate a rule or method'
+    };
+
+    const response = await request(app)
+      .post('/api')
+      .send(requestBody)
+      .set('Accept', 'application/json');
+
+    expect(response.statusCode).toBe(401);
+    expect(response.body).toEqual({ "status": 401, "message": "APIキーの無料枠が期限切れです" });
     expect(response.headers['content-type']).toMatch('application/json');
   });
 

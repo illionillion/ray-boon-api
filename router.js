@@ -71,6 +71,9 @@ router.post('/api', async (req, res, next) => {
     // ChatGPTのAPIキーが間違っている場合のエラー処理
     } else if (error.message === 'Request failed with status code 401') {
       return next(new ExpressError('APIキーが間違っています', 401));
+    // ChatGPTのAPIキー無料枠が期限切れの場合のエラー処理
+    } else if (error.message = 'Request failed with status code 429'){
+      return next(new ExpressError('APIキーの無料枠が期限切れです', 401));
     } else {
       return next(error);
     }
