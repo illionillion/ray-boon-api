@@ -96,7 +96,7 @@ describe('API Tests', () => {
 
   test('POST /api with apiKey exceeding maximum length should return validation error', async () => {
     const requestBody = {
-      apiKey: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy', //101文字
+      apiKey: 'a'.repeat(101),
       wordLang: 'English',
       wordName: 'example',
       wordMean: 'an instance serving to illustrate a rule or method'
@@ -116,7 +116,7 @@ describe('API Tests', () => {
   test('POST /api with wordLang exceeding maximum length should return validation error', async () => {
     const requestBody = {
       apiKey: apiKey,
-      wordLang: 'abcdefghijklmnop', // 16文字',
+      wordLang: 'a'.repeat(16),
       wordName: 'example',
       wordMean: 'an instance serving to illustrate a rule or method'
     };
@@ -135,7 +135,7 @@ describe('API Tests', () => {
     const requestBody = {
       apiKey: apiKey,
       wordLang: 'English',
-      wordName: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstu', // 196文字
+      wordName: 'a'.repeat(196),
       wordMean: 'an instance serving to illustrate a rule or method'
     };
   
@@ -154,7 +154,7 @@ describe('API Tests', () => {
       apiKey: apiKey,
       wordLang: 'English',
       wordName: 'example',
-      wordMean: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxy' // 101文字
+      wordMean: 'a'.repeat(101)
     };
   
     const response = await request(app)
