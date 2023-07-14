@@ -7,7 +7,7 @@ const generateExample = async (apiKey, wordLang, wordName, wordMean) => {
   const openai = new OpenAIApi(configuration);
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo-0613",
-    messages: [{ role: "user", content: `${wordLang}で${wordMean}という意味の${wordName}という単語があります。この単語を使った例文、文字コード、例文を日本語訳した文を出力してください` }],
+    messages: [{ role: "user", content: `${wordLang}で${wordMean}という意味の${wordName}という単語があります。この単語を使った例文と、例文を日本語訳した文を出力してください。また、${wordLang}の言語コードを出力してください。` }],
     functions: [
       {
         "name": "generate_example",
