@@ -55,7 +55,8 @@ describe('API Tests', () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.headers['content-type']).toMatch('application/json');
-    expect(response.body).toHaveProperty('content');
+    expect(response.body).toHaveProperty('example_sentence');
+    expect(response.body).toHaveProperty('example_sentence_translated');
   });
 
   test('POST /api with invalid API key should return unauthorized error', async () => {

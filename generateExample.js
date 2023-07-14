@@ -21,7 +21,7 @@ const generateExample = async (apiKey, wordLang, wordName, wordMean) => {
             },
             "example_sentence_translated": {
               "type": "string",
-              "description": "Generated example sentence translated into Japanese"
+              "description": "generated example sentence translated into Japanese"
             }
           }
         },
