@@ -7,7 +7,7 @@ const generateExample = async (apiKey, wordLang, wordName, wordMean) => {
   const openai = new OpenAIApi(configuration);
   const completion = await openai.createChatCompletion({
     model: "gpt-3.5-turbo-0613",
-    messages: [{ role: "user", content: `${wordLang}で${wordMean}という意味の${wordName}という単語があります。この単語を使った例文と、例文を日本語訳した文を出力してください` }],
+    messages: [{ role: "user", content: `${wordLang}で${wordMean}という意味の${wordName}という単語があります。この単語を使った例文、文字コード、例文を日本語訳した文を出力してください` }],
     functions: [
       {
         "name": "generate_example",
@@ -22,10 +22,14 @@ const generateExample = async (apiKey, wordLang, wordName, wordMean) => {
             "example_sentence_translated": {
               "type": "string",
               "description": "generated example sentence translated into Japanese"
+            },
+            "example_sentence_language_code": {
+              "type": "string",
+              "description": "language_code of generated example sentences"
             }
           }
         },
-        required: ["example_sentence", "example_sentence_translated"]
+        required: ["example_sentence", "example_sentence_translated", "example_sentence_language_code"]
       }
     ],
     function_call: "auto"
