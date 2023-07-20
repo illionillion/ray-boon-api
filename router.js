@@ -39,7 +39,7 @@ const generateExampleSchema = Joi.object({
     'any.required': '意味は必須です',
     'string.max': '意味は100文字以下にしてください'
   }),
-  sentenceDiff: Joi.string().valid('easy', 'medium', 'hard').optional().messages(),
+  sentenceDiff: Joi.string().valid('easy', 'normal', 'hard').optional().messages(),
 });
 
 router.get('/', (req, res) => {
