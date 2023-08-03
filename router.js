@@ -39,7 +39,7 @@ const generateExampleSchema = Joi.object({
     'any.required': '意味は必須です',
     'string.max': '意味は100文字以下にしてください'
   }),
-  sentenceDiff: Joi.string().valid('easy', 'normal', 'hard').optional().messages(),
+  sentenceDiff: Joi.string().valid('easy', 'normal', 'hard').required().messages(),
 });
 
 router.get('/', (req, res) => {
@@ -58,13 +58,10 @@ router.post('/timeout', async (req, res) => {
   await new Promise((resolve) => setTimeout(resolve, 6000));
 });
 
-router.post('/api', async (req, res, next) => {
+router.post('/api/v1', async (req, res, next) => {
   try {
     await generateExampleSchema.validateAsync(req.body, { abortEarly: false });
     const { apiKey, wordLang, wordName, wordMean, sentenceDiff } = req.body;
-    if (!sentenceDiff) {
-      sentenceDiff = 'normal';
-    }
     const result = await generateExample(apiKey, wordLang, wordName, wordMean, sentenceDiff);
     res.status(200).json(result);
   } catch (error) {
