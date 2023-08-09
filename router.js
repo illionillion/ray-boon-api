@@ -3,6 +3,7 @@ const router = express.Router();
 const Joi = require('joi');
 const ExpressError = require('./utils/ExpressError')
 const generateExample = require("./generateExample");
+const generateExampleV1 = require("./generateExampleV1");
 
 const timeout = require('connect-timeout');
 
@@ -113,7 +114,7 @@ router.post('/api/v1', async (req, res, next) => {
   try {
     await generateExampleSchemaV1.validateAsync(req.body, { abortEarly: false });
     const { apiKey, wordLang, wordName, wordMean, sentenceDiff } = req.body;
-    const result = await generateExample(apiKey, wordLang, wordName, wordMean, sentenceDiff);
+    const result = await generateExampleV1(apiKey, wordLang, wordName, wordMean, sentenceDiff);
     res.status(200).json(result);
   } catch (error) {
     // パラメータが不足している場合のエラー処理
