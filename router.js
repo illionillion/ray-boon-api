@@ -58,6 +58,29 @@ router.post('/timeout', async (req, res) => {
   await new Promise((resolve) => setTimeout(resolve, 6000));
 });
 
+router.post('/api', async (req, res, next) => {
+  try {
+    await generateExampleSchema.validateAsync(req.body, { abortEarly: false });
+    const { apiKey, wordLang, wordName, wordMean } = req.body;
+    const result = await generateExample(apiKey, wordLang, wordName, wordMean);
+    res.status(200).json(result);
+  } catch (error) {
+    // パラメータが不足している場合のエラー処理
+    if (error.isJoi) {
+      const validationErrorMsg = error.details.map(details => details.message).join(',');
+      return next(new ExpressError(validationErrorMsg, 400));
+      // ChatGPTのAPIキーが間違っている場合のエラー処理
+    } else if (error.message === 'Request failed with status code 401') {
+      return next(new ExpressError('APIキーが間違っています', 401));
+      // ChatGPTのAPIキー無料枠が期限切れの場合のエラー処理
+    } else if (error.message = 'Request failed with status code 429') {
+      return next(new ExpressError('APIキーの無料枠が期限切れです', 401));
+    } else {
+      return next(error);
+    }
+  }
+});
+
 router.post('/api/v1', async (req, res, next) => {
   try {
     await generateExampleSchema.validateAsync(req.body, { abortEarly: false });
