@@ -39,6 +39,30 @@ const generateExampleSchema = Joi.object({
     'any.required': '意味は必須です',
     'string.max': '意味は100文字以下にしてください'
   }),
+});
+
+// 例文を生成するための必須パラメータに対するバリデーション(V1)
+const generateExampleSchemaV1 = Joi.object({
+  apiKey: Joi.string().max(100).required().messages({
+    'string.empty': 'APIキーは必須です',
+    'any.required': 'APIキーは必須です',
+    'string.max': 'APIキーは100文字以下にしてください'
+  }),
+  wordLang: Joi.string().max(15).required().messages({
+    'string.empty': '言語は必須です',
+    'any.required': '言語は必須です',
+    'string.max': '言語は15文字以下にしてください'
+  }),
+  wordName: Joi.string().max(195).required().messages({
+    'string.empty': '単語名は必須です',
+    'any.required': '単語名は必須です',
+    'string.max': '単語名は195文字以下にしてください'
+  }),
+  wordMean: Joi.string().max(100).required().messages({
+    'string.empty': '意味は必須です',
+    'any.required': '意味は必須です',
+    'string.max': '意味は100文字以下にしてください'
+  }),
   sentenceDiff: Joi.string().valid('easy', 'normal', 'hard').required().messages({
     'string.empty': '難易度は必須です',
     'any.required': '難易度は必須です',
@@ -87,7 +111,7 @@ router.post('/api', async (req, res, next) => {
 
 router.post('/api/v1', async (req, res, next) => {
   try {
-    await generateExampleSchema.validateAsync(req.body, { abortEarly: false });
+    await generateExampleSchemaV1.validateAsync(req.body, { abortEarly: false });
     const { apiKey, wordLang, wordName, wordMean, sentenceDiff } = req.body;
     const result = await generateExample(apiKey, wordLang, wordName, wordMean, sentenceDiff);
     res.status(200).json(result);
