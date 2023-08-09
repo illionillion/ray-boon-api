@@ -1,8 +1,34 @@
 const express = require('express');
 const router = express.Router();
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
 const Joi = require('joi');
-const ExpressError = require('./utils/ExpressError')
+const ExpressError = require('./utils/ExpressError');
 const generateExample = require("./generateExample");
+
+const options = {
+  swaggerDefinition: {
+    openapi : '3.0.3',
+    info: {
+      title: 'RAYBOON API',
+      version: '1.0.0',
+      description: 'RAYBOONのAPIリファレンスです。'
+    },
+    servers: [
+      {
+        url: 'https://ray-boon-api.vercel.app',
+        description: '本番環境サーバー',
+      },
+      {
+        url: 'http://localhost:3000',
+        description: '開発環境サーバー',
+      },
+    ],
+  },
+  apis: ['./router.js'],
+}
+
+router.use('/api-docs/v1/', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)));
 
 const timeout = require('connect-timeout');
 
@@ -57,6 +83,92 @@ router.post('/timeout', async (req, res) => {
   await new Promise((resolve) => setTimeout(resolve, 6000));
 });
 
+/**
+ * @swagger
+ * /api:
+ *   post:
+ *     tags:
+ *       -  例文生成
+ *     summary: 単語から例文を生成する
+ *     description: 単語学習のための例文を生成する
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *                 apiKey:
+ *                   type: string
+ *                   description: OpenAIのAPIキー
+ *                   example: OpenAIのAPIキー
+ *                 wordLang:
+ *                    type: string
+ *                    description: 言語名
+ *                    example: 中国語
+ *                 wordName:
+ *                     type: string
+ *                     description: 単語名
+ *                     example: 你好
+ *                 wordMean:
+ *                      type: string
+ *                      description: 意味
+ *                      example: こんにちは
+ *     responses:
+ *       200:
+ *         description: 成功時のレスポンス
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 content:
+ *                   example: 你好，我喜欢吃日本料理。こんにちは、私は日本料理が好きです。
+ *       400:
+ *         description: パラメータが不足している場合のレスポンス
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   example: 400
+ *                 message:
+ *                   example: パラメータは必須です
+ *       401:
+ *         description: OpenAIのAPIキーが間違っているか、期限切れの場合のレスポンス
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   example: 401
+ *                 message:
+ *                   example: APIキーが間違っています
+ *       500:
+ *         description: サーバーで問題が発生した場合のレスポンス
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   example: 500
+ *                 message:
+ *                   example: 問題が発生しました
+ *       503:
+ *         description: タイムアウトした場合のレスポンス
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   example: 503
+ *                 message:
+ *                   example: タイムアウトしました
+ */
 router.post('/api', async (req, res, next) => {
   try {
     await generateExampleSchema.validateAsync(req.body, { abortEarly: false });
