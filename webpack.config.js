@@ -1,13 +1,6 @@
-const path = require('path')
+const path = require('path');
+
 module.exports = {
-  entry: path.resolve(__dirname, "index.js"),
-  output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: 'bundle.js'
-  },
-  node: {
-    __dirname: false
-  },
   plugins: [
     new CopyWebpackPlugin({
         patterns: [
@@ -19,4 +12,4 @@ module.exports = {
         ]
     })
   ]
-}
+};
