@@ -1,7 +1,11 @@
 const express = require('express')
 const app = express()
 const path = require('node:path');
+const cors = require('cors');
 const router = require('./router');
+
+// CORS設定
+app.use(cors());
 
 // jsonを使えるようにする
 app.use(express.json({ limit: '10mb' }));
