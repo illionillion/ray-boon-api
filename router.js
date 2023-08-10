@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 const Joi = require('joi');
 const ExpressError = require('./utils/ExpressError');
@@ -28,7 +27,12 @@ const options = {
   apis: ['./router.js'],
 }
 
-router.use('/api-docs/v1/', swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)));
+const swaggerSpec = swaggerJSDoc(options);
+
+router.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type','application/json');
+  res.send(swaggerSpec);
+});
 
 const timeout = require('connect-timeout');
 
