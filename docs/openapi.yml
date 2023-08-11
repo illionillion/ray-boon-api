@@ -13,8 +13,7 @@ paths:
     post:
       tags:
         - 例文生成
-      summary: 単語から例文を生成する
-      description: 単語学習のための例文を生成する
+      description: apiKey・wordLang・wordName・wordMeanから単語学習のための例文を生成する
       requestBody:
         required: true
         content:
@@ -101,8 +100,7 @@ paths:
     post:
         tags:
           - 例文生成
-        summary: 単語から例文を生成する
-        description: 単語学習のための例文を生成する
+        description: apiKey・wordLang・wordName・wordMean・sentenceDiffから単語学習のための例文を生成する
         requestBody:
           required: true
           content:
@@ -194,8 +192,7 @@ paths:
     post:
         tags:
           - 例文生成
-        summary: 単語から例文を生成する
-        description: 単語学習のための例文を生成する
+        description: apiKey・wordLang・wordName・wordMean・sentenceDiffから単語学習のための例文を生成する
         requestBody:
           required: true
           content:
