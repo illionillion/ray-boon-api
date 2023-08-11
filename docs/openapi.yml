@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  version: 0.0.0
+  title: RAYBOON API
+  description: RAYBOONのAPIドキュメントです。
+servers:
+  - url: "https://ray-boon-api.vercel.app"
+    description: "本番環境"
+paths:
+  /api:
+    post:
+      tags:
+        - 例文生成
+      summary: 単語から例文を生成する
+      description: 単語学習のための例文を生成する
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                apiKey:
+                  type: string
+                  description: OpenAIのAPIキー
+                  example: OpenAIのAPIキー
+                wordLang:
+                  type: string
+                  description: 言語名
+                  example: 中国語
+                wordName:
+                  type: string
+                  description: 単語名
+                  example: 你好
+                wordMean:
+                  type: string
+                  description: 意味
+                  example: こんにちは
+              required:
+                - apiKey
+                - wordLang
+                - wordName
+                - wordMean
+      responses:
+        200:
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    example: 你好，我喜欢吃日本料理。こんにちは、私は日本料理が好きです。
+        400:
+          description: パラメータが不足している場合のレスポンス
+          content:
+           application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    example: 400
+                  message:
+                    example: パラメータは必須です
+        401:
+          description: OpenAIのAPIキーが間違っているか、期限切れの場合のレスポンス
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    example: 401
+                  message:
+                    example: APIキーが間違っています
+        500:
+          description: サーバーで問題が発生した場合のレスポンス
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    example: 500
+                  message:
+                    example: 問題が発生しました
+        503:
+          description: タイムアウトした場合のレスポンス
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    example: 503
+                  message:
+                    example: タイムアウトしました
