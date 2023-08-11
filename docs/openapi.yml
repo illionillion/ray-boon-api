@@ -6,6 +6,8 @@ info:
 servers:
   - url: "https://ray-boon-api.vercel.app"
     description: "本番環境"
+  - url: "http://localhost:3000"
+    description: "ローカル環境"
 paths:
   /api:
     post:
