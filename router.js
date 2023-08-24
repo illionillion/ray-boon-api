@@ -16,7 +16,7 @@ const timeoutHandler = (req, res, next) => {
 };
 
 // タイムアウトを処理するミドルウェアを使えるようにする
-router.use(timeout('5s'));
+router.use(timeout('10s'));
 router.use(timeoutHandler);
 
 // 例文を生成するための必須パラメータに対するバリデーション
