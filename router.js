@@ -5,7 +5,7 @@ const ExpressError = require('./utils/ExpressError')
 const generateExample = require("./generateExample");
 const generateExampleV1 = require("./generateExampleV1");
 const generateExampleV2 = require("./generateExampleV2");
-
+const generateExampleV3 = require("./generateExampleV3");
 const timeout = require('connect-timeout');
 
 // タイムアウトを処理するミドルウェア
@@ -139,6 +139,29 @@ router.post('/api/v2', async (req, res, next) => {
     await generateExampleSchemaV1.validateAsync(req.body, { abortEarly: false });
     const { apiKey, wordLang, wordName, wordMean, sentenceDiff } = req.body;
     const result = await generateExampleV2(apiKey, wordLang, wordName, wordMean, sentenceDiff);
+    res.status(200).json(result);
+  } catch (error) {
+    // パラメータが不足している場合のエラー処理
+    if (error.isJoi) {
+      const validationErrorMsg = error.details.map(details => details.message).join(',');
+      return next(new ExpressError(validationErrorMsg, 400));
+    // ChatGPTのAPIキーが間違っている場合のエラー処理
+    } else if (error.message === 'Request failed with status code 401') {
+      return next(new ExpressError('APIキーが間違っています', 401));
+    // ChatGPTのAPIキー無料枠が期限切れの場合のエラー処理
+    } else if (error.message = 'Request failed with status code 429'){
+      return next(new ExpressError('APIキーの無料枠が期限切れです', 401));
+    } else {
+      return next(error);
+    }
+  }
+});
+
+router.post('/api/v3', async (req, res, next) => {
+  try {
+    await generateExampleSchemaV1.validateAsync(req.body, { abortEarly: false });
+    const { apiKey, wordLang, wordName, wordMean, sentenceDiff } = req.body;
+    const result = await generateExampleV3(apiKey, wordLang, wordName, wordMean, sentenceDiff);
     res.status(200).json(result);
   } catch (error) {
     // パラメータが不足している場合のエラー処理
