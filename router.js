@@ -80,8 +80,9 @@ router.get('/privacy-policy', (req, res) => {
   res.sendFile(__dirname + '/public/PrivacyPolicy.html');
 })
 
+// モバイル側で対応できたら削除する
 router.get('/PrivacyPolicy', (req, res) => {
-  res.sendFile(__dirname + '/public/PrivacyPolicy.html');
+  res.redirect('/privacy-policy')
 })
 
 router.get('/how-to-setting', (req, res) => {
