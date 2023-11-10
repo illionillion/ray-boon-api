@@ -80,6 +80,10 @@ router.get('/privacy-policy', (req, res) => {
   res.sendFile(__dirname + '/public/PrivacyPolicy.html');
 })
 
+router.get('/PrivacyPolicy', (req, res) => {
+  res.sendFile(__dirname + '/public/PrivacyPolicy.html');
+})
+
 router.get('/how-to-setting', (req, res) => {
   res.sendFile(__dirname + '/public/HowToSetting.html');
 })
